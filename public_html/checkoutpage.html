@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #ffe6f2;
+            /* Super light pink background */
+            margin: 0;
+            padding: 0;
+        }
+        
+        .checkout_page {
+            max-width: 900px;
+            margin: 50px auto;
+            padding: 30px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        h2 {
+            text-align: center;
+            color: #ff6699;
+            margin-bottom: 20px;
+            font-size: 28px;
+        }
+        
+        .cart_list {
+            list-style-type: none;
+            padding: 0;
+            margin-bottom: 20px;
+        }
+        
+        .cart_list li {
+            padding: 10px;
+            margin-bottom: 10px;
+            background-color: #ffe6f2;
+            border: 1px solid #ff99cc;
+            border-radius: 5px;
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .total {
+            font-weight: bold;
+            font-size: 20px;
+            color: #ff3366;
+            text-align: right;
+            margin-bottom: 30px;
+        }
+        
+        #cartTotalAmount {
+            font-weight: bold;
+            color: #ff3366;
+        }
+        
+        .form_group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            font-weight: bold;
+            color: #ff3366;
+            margin-bottom: 5px;
+        }
+        
+        input[type="text"],
+        input[type="email"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ff99cc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        
+        .button {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            background-color: #ff6699;
+            color: white;
+            text-align: center;
+            border: none;
+            font-size: 18px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .button:hover {
+            background-color: #ff3366;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="checkout_page">
+        <h2>Your Cart</h2>
+        <ul class="cart_list" id="checkoutCartList">
+            <!-- Items will be injected here -->
+        </ul>
+        <p class="total">Total: <span id="cartTotalAmount">LKR 0.00</span></p>
+
+        <h2>Billing Details</h2>
+        <form id="billingDetailsForm">
+            <div class="form_group">
+                <label for="name">Full Name</label>
+                <input type="text" id="name" placeholder="Enter your full name" required>
+            </div>
+            <div class="form_group">
+                <label for="email">Email</label>
+                <input type="email" id="email" placeholder="Enter your email" required>
+            </div>
+            <div class="form_group">
+                <label for="address">Address</label>
+                <input type="text" id="address" placeholder="Enter your address" required>
+            </div>
+            <div class="form_group">
+                <label for="city">City</label>
+                <input type="text" id="city" placeholder="Enter your city" required>
+            </div>
+            <div class="form_group">
+                <label for="postalCode">Postal Code</label>
+                <input type="text" id="postalCode" placeholder="Enter your postal code" required>
+            </div>
+            <div class="form_group">
+                <label for="country">Country</label>
+                <input type="text" id="country" placeholder="Enter your country" required>
+            </div>
+            <button class="button" type="submit" id="completePurchase">Complete Purchase</button>
+        </form>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const cart = JSON.parse(localStorage.getItem('shoppingCart')) || [];
+            const checkoutCartList = document.getElementById('checkoutCartList');
+            const cartTotalAmount = document.getElementById('cartTotalAmount');
+            let totalAmount = 0;
+
+            if (cart.length === 0) {
+                checkoutCartList.innerHTML = '<li class="empty">No products in the cart.</li>';
+            } else {
+                cart.forEach(product => {
+                    totalAmount += product.quantity * product.price;
+                    checkoutCartList.innerHTML += `
+                        <li>
+                            <span>${product.name}</span> - Quantity: ${product.quantity} - Price: LKR ${(product.quantity * product.price).toFixed(2)}
+                        </li>
+                    `;
+                });
+                cartTotalAmount.innerText = `LKR ${totalAmount.toFixed(2)}`;
+            }
+
+            // Handle form submission (for future backend processing)
+            const billingForm = document.getElementById('billingDetailsForm');
+            billingForm.addEventListener('submit', function(event) {
+                event.preventDefault();
+                alert('Purchase Completed Successfully!');
+                localStorage.clear(); // Clear cart after purchase
+                window.location.href = "thank_you.html"; // Redirect to thank you page (you can create it)
+            });
+        });
+    </script>
+</body>
+
+</html>

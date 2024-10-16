@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personalized Makeup Survey</title>
+</head>
+
+<body>
+
+    <h1>Personalized Makeup Recommendations</h1>
+
+    <!-- Survey Form -->
+    <form id="surveyForm">
+        <label for="skin_type">Select your Skin Type:</label><br>
+        <select id="skin_type" name="skin_type">
+            <option value="normal">Normal</option>
+            <option value="oily">Oily</option>
+            <option value="dry">Dry</option>
+            <option value="combination">Combination</option>
+        </select><br><br>
+
+        <label for="concerns">Select your Skin Concerns:</label><br>
+        <select id="concerns" name="concerns">
+            <option value="acne">Acne</option>
+            <option value="sensitivity">Sensitivity</option>
+            <option value="wrinkles">Wrinkles</option>
+            <option value="pigmentation">Pigmentation</option>
+        </select><br><br>
+
+        <input type="submit" value="Get Recommendations">
+    </form>
+
+    <h2>Recommended Products:</h2>
+    <ul id="recommendations"></ul>
+
+    <script>
+        // JavaScript to handle form submission and send data to the backend
+        document.getElementById('surveyForm').onsubmit = function(e) {
+            e.preventDefault(); // Prevent page reload
+
+            // Collect survey data
+            const skinType = document.getElementById('skin_type').value;
+            const concerns = document.getElementById('concerns').value;
+
+            // Make POST request to the backend API
+            fetch('http://127.0.0.1:5000/survey', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        skin_type: skinType,
+                        concerns: concerns
+                    }),
+                })
+                .then(response => response.json())
+                .then(data => {
+                    // Display the recommendations
+                    const recommendationList = document.getElementById('recommendations');
+                    recommendationList.innerHTML = ''; // Clear previous results
+                    data.forEach(recommendation => {
+                        const li = document.createElement('li');
+                        li.textContent = recommendation;
+                        recommendationList.appendChild(li);
+                    });
+                })
+                .catch(error => console.error('Error:', error));
+        };
+    </script>
+
+</body>
+
+</html>
